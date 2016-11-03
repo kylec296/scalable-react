@@ -1,9 +1,10 @@
 // import { take, call, put, select } from 'redux-saga/effects';
 import { call, put } from 'redux-saga/effects';
-import { takeLatest } from 'redux-saga';
-// import { SELECT_TOPIC } from '../NavigationContainer/constants';
+import { takeLatest } from 'redux-saga';;
 import { requestLinksSucceeded, requestLinksFailed } from './actions';
-import { REQUEST_LINKS } from './constants';
+import { REQUEST_LINKS, START_ADD } from './constants';
+//triggers a url change when this is fired
+import { push } from 'react-router-redux';
 
 function fetchLinksFromServer(topicName) {
   //watch the quotes here should be slanted not straight up
@@ -24,6 +25,14 @@ function* fetchLinks(action) {
   }
 }
 
+function* startAdd(action) {
+  yield put(push(`/topics/${action.topicName}/add`));
+}
+
+export function* startAddSaga() {
+  yield* takeLatest(START_ADD, startAdd);
+}
+
 // Individual exports for testing
 // * = generator function to kick off  async stuff
  export function* defaultSaga() {
@@ -33,4 +42,5 @@ function* fetchLinks(action) {
 // All sagas to be loaded
 export default [
   defaultSaga,
+  startAddSaga,
 ];
